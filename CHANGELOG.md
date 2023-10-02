@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.4](https://github.com/taxdown/lift/compare/v1.0.3...v1.0.4) (2023-10-02)
+
+
+### Bug Fixes
+
+* fix random contructs with stage ([#8](https://github.com/taxdown/lift/issues/8)) ([d2992cf](https://github.com/taxdown/lift/commit/d2992cfaf35a6bdf3345245af76625fb35adac07))
+
 ## [1.0.3](https://github.com/taxdown/lift/compare/v1.0.2...v1.0.3) (2023-10-02)
 
 
