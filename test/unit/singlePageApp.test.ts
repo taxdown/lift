@@ -7,6 +7,9 @@ describe("single page app", () => {
     afterEach(() => {
         sinon.restore();
     });
+    afterAll(() => {
+        jest.unmock("uuid");
+    });
 
     it("should define a request function that redirects nested uris to index.html", async () => {
         const { cfTemplate, computeLogicalId } = await runServerless({

@@ -13,6 +13,9 @@ describe("static websites", () => {
     afterEach(() => {
         sinon.restore();
     });
+    afterAll(() => {
+        jest.unmock("uuid");
+    });
 
     it("should create all required resources", async () => {
         const { cfTemplate, computeLogicalId } = await runServerless({
