@@ -3,6 +3,7 @@ import * as sinon from "sinon";
 import { baseConfig, runServerless } from "../utils/runServerless";
 
 describe("single page app", () => {
+    jest.mock("uuid", () => ({ v4: () => "123456789" }));
     afterEach(() => {
         sinon.restore();
     });
@@ -22,7 +23,7 @@ describe("single page app", () => {
                 },
             }),
         });
-        const cfDistributionLogicalId = computeLogicalId("landing", "CDN");
+        const cfDistributionLogicalId = computeLogicalId("landing", "123456789");
         const requestFunction = computeLogicalId("landing", "RequestFunction");
         const responseFunction = computeLogicalId("landing", "ResponseFunction");
         expect(cfTemplate.Resources[requestFunction]).toMatchInlineSnapshot(`
@@ -108,18 +109,18 @@ describe("single page app", () => {
                 },
             }),
         });
-        const cfDistributionLogicalId = computeLogicalId("landing", "CDN");
+        const cfDistributionLogicalId = computeLogicalId("landing", "123456789");
         expect(
             get(cfTemplate.Resources[cfDistributionLogicalId], "Properties.DistributionConfig.Origins")
         ).toMatchObject([
             {
                 DomainName: { "Fn::GetAtt": ["landingBucket2B5C7526", "RegionalDomainName"] },
-                Id: "landingCDNOrigin1FCED8263",
+                Id: "landing123456789Origin178B17E9A",
                 S3OriginConfig: {
                     OriginAccessIdentity: {
                         "Fn::Join": [
                             "",
-                            ["origin-access-identity/cloudfront/", { Ref: "landingCDNOrigin1S3Origin18717D49" }],
+                            ["origin-access-identity/cloudfront/", { Ref: "landing123456789Origin1S3Origin98EA0851" }],
                         ],
                     },
                 },
@@ -127,7 +128,7 @@ describe("single page app", () => {
             {
                 CustomOriginConfig: { OriginProtocolPolicy: "https-only", OriginSSLProtocols: ["TLSv1.2"] },
                 DomainName: "api.example.com",
-                Id: "landingCDNOrigin22C592402",
+                Id: "landing123456789Origin2D6C929C9",
                 OriginPath: "/api",
             },
         ]);
@@ -138,12 +139,12 @@ describe("single page app", () => {
             {
                 AllowedMethods: ["GET", "HEAD", "OPTIONS", "PUT", "PATCH", "POST", "DELETE"],
                 CachePolicyId: {
-                    Ref: "landingapiexamplecomCachePolicy95D41BEB",
+                    Ref: "landing123456789CachePolicyBD26FC38",
                 },
                 CachedMethods: ["GET", "HEAD", "OPTIONS"],
                 Compress: true,
                 PathPattern: "api/*",
-                TargetOriginId: "landingCDNOrigin22C592402",
+                TargetOriginId: "landing123456789Origin2D6C929C9",
                 ViewerProtocolPolicy: "allow-all",
             },
         ]);
@@ -220,7 +221,7 @@ describe("single page app", () => {
                 },
             }),
         });
-        expect(cfTemplate.Resources[computeLogicalId("landing", "CDN")].Properties).toMatchObject({
+        expect(cfTemplate.Resources[computeLogicalId("landing", "123456789")].Properties).toMatchObject({
             DistributionConfig: {
                 Comment: "This is my comment",
             },
