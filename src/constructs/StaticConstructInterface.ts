@@ -15,7 +15,8 @@ export interface StaticConstructInterface {
     create(
         provider: ProviderInterface,
         id: string,
-        configuration: { extensions?: Record<string, unknown> } & Record<string, unknown>
+        configuration: { extensions?: Record<string, unknown> } & Record<string, unknown>,
+        stage?: string
     ): ConstructInterface;
 }
 

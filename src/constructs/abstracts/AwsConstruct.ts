@@ -62,12 +62,14 @@ export abstract class AwsConstruct extends CdkConstruct implements ConstructInte
                 scope: CdkConstruct,
                 id: string,
                 configuration: { extensions?: Record<string, unknown> } & Record<string, unknown>,
-                provider: AwsProvider
+                provider: AwsProvider,
+                stage?: string
             ): C;
         },
         provider: AwsProvider,
         id: string,
-        configuration: { extensions?: Record<string, unknown> } & Record<string, unknown>
+        configuration: { extensions?: Record<string, unknown> } & Record<string, unknown>,
+        stage?: string
     ): C {
         /**
          * We are passing a `configuration` of type `Record<string, unknown>` to a parameter
@@ -79,7 +81,7 @@ export abstract class AwsConstruct extends CdkConstruct implements ConstructInte
          * As such, we _know_ that `configuration` has the correct type, it is just not validated
          * by TypeScript's compiler.
          */
-        const construct = new this(provider.stack, id, configuration, provider);
+        const construct = new this(provider.stack, id, configuration, provider, stage);
         construct.applyExtensions(configuration.extensions ?? {});
 
         return construct;

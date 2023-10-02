@@ -91,7 +91,9 @@ export class AwsProvider implements ProviderInterface {
         }
         const configuration = get(this.serverless.configurationInput.constructs, id, {});
 
-        return Construct.create(this, id, configuration);
+        const stage = this.serverless.processedInput.options.stage as string | undefined;
+
+        return Construct.create(this, id, configuration, stage);
     }
 
     addFunction(functionName: string, functionConfig: unknown): void {

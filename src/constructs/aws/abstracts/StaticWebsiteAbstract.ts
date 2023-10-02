@@ -125,14 +125,16 @@ export abstract class StaticWebsiteAbstract extends AwsConstruct {
         scope: CdkConstruct,
         protected readonly id: string,
         protected readonly configuration: CommonStaticWebsiteConfiguration,
-        protected readonly provider: AwsProvider
+        protected readonly provider: AwsProvider,
+        protected readonly stage?: string
     ) {
         super(scope, id);
 
         const bucketProps = this.getBucketProps();
 
         this.bucket = new Bucket(this, "Bucket", bucketProps);
-        const uuid = v4().replace(/-/g, "");
+
+        const servicesId = this.stage?.replace(/-/g, "") ?? v4().replace(/-/g, "");
 
         // Cast the domains to an array
         // if configuration.domain is an empty array or an empty string, ignore it
@@ -173,8 +175,8 @@ export abstract class StaticWebsiteAbstract extends AwsConstruct {
                             httpsPort: 443,
                         }),
                         cachePolicy: origin.cacheBehavior
-                            ? new CachePolicy(this, `${uuid}$CachePolicy`, {
-                                  cachePolicyName: `${uuid}CachePolicy`,
+                            ? new CachePolicy(this, `${servicesId}$CachePolicy`, {
+                                  cachePolicyName: `${servicesId}CachePolicy`,
                                   comment: `Cache policy for ${origin.domain}`,
                                   defaultTtl: Duration.seconds(origin.cacheBehavior.defaultTtl ?? 0),
                                   maxTtl: Duration.seconds(origin.cacheBehavior.maxTtl ?? 31536000),
@@ -204,7 +206,7 @@ export abstract class StaticWebsiteAbstract extends AwsConstruct {
                 })
                 ?.reduce((acc, behavior) => ({ ...acc, [behavior.pathPattern]: behavior }), {}) ?? {};
 
-        this.distribution = new Distribution(this, uuid, {
+        this.distribution = new Distribution(this, servicesId, {
             comment: `${provider.stackName} ${id} website CDN`,
             // Send all page requests to index.html
             defaultRootObject: "index.html",
