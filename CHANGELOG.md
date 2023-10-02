@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.3](https://github.com/taxdown/lift/compare/v1.0.2...v1.0.3) (2023-10-02)
+
+
+### Bug Fixes
+
+* generate random ids ([#6](https://github.com/taxdown/lift/issues/6)) ([6475ccc](https://github.com/taxdown/lift/commit/6475ccc7b55737d5a6d1fc26b7f4330bcaccaa04))
+
 ## [1.0.2](https://github.com/taxdown/lift/compare/v1.0.1...v1.0.2) (2023-10-02)
 
 
