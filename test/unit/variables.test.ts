@@ -1,6 +1,12 @@
 import { runServerlessCli } from "../utils/runServerlessCli";
 
 describe("variables", () => {
+    jest.mock("uuid", () => ({ v4: () => "123456789" }));
+
+    afterAll(() => {
+        jest.unmock("uuid");
+    });
+
     it("should resolve construct variables", async () => {
         const { cfTemplate } = await runServerlessCli({
             fixture: "variables",
@@ -36,7 +42,13 @@ describe("variables", () => {
         expect(cfTemplate.Resources.barAlarmTopicSubscription56286022).toHaveProperty("Properties.Endpoint", {
             Ref: "bucketBucketF19722A9",
         });
-        expect(cfTemplate.Resources.appCDN7AD2C001).toMatchObject({
+
+        const cdnValue =
+            Object.keys(cfTemplate.Resources).find(
+                (value) =>
+                    (cfTemplate.Resources[value] as Record<string, unknown>).Type === "AWS::CloudFront::Distribution"
+            ) ?? "";
+        expect(cfTemplate.Resources[cdnValue] as Record<string, unknown>).toMatchObject({
             Properties: {
                 DistributionConfig: {
                     Aliases: ["Custom variable 1"],

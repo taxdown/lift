@@ -7,8 +7,13 @@ import { computeS3ETag } from "../../src/utils/s3-sync";
 import { mockAws } from "../utils/mockAws";
 
 describe("server-side website", () => {
+    jest.mock("uuid", () => ({ v4: () => "123456789" }));
     afterEach(() => {
         sinon.restore();
+    });
+
+    afterAll(() => {
+        jest.unmock("uuid");
     });
 
     it("should create all required resources", async () => {

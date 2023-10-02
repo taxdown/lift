@@ -8,8 +8,13 @@ import { computeS3ETag } from "../../src/utils/s3-sync";
 import { mockAws } from "../utils/mockAws";
 
 describe("static websites", () => {
+    jest.mock("uuid", () => ({ v4: () => "123456789" }));
+
     afterEach(() => {
         sinon.restore();
+    });
+    afterAll(() => {
+        jest.unmock("uuid");
     });
 
     it("should create all required resources", async () => {
@@ -27,15 +32,15 @@ describe("static websites", () => {
         const bucketLogicalId = computeLogicalId("landing", "Bucket");
         const bucketPolicyLogicalId = computeLogicalId("landing", "Bucket", "Policy");
         const responseFunction = computeLogicalId("landing", "ResponseFunction");
-        const cfDistributionLogicalId = computeLogicalId("landing", "CDN");
-        const cfOriginId = computeLogicalId("landing", "CDN", "Origin1");
+        const cfDistributionLogicalId = computeLogicalId("landing", "123456789");
+        const cfOriginId = computeLogicalId("landing", "123456789", "Origin1");
         expect(Object.keys(cfTemplate.Resources)).toStrictEqual([
             "ServerlessDeploymentBucket",
             "ServerlessDeploymentBucketPolicy",
+            cfDistributionLogicalId,
             bucketLogicalId,
             bucketPolicyLogicalId,
             responseFunction,
-            cfDistributionLogicalId,
         ]);
         expect(cfTemplate.Resources[bucketLogicalId]).toStrictEqual({
             Type: "AWS::S3::Bucket",
@@ -198,7 +203,7 @@ describe("static websites", () => {
                 },
             }),
         });
-        const cfDistributionLogicalId = computeLogicalId("landing", "CDN");
+        const cfDistributionLogicalId = computeLogicalId("landing", "123456789");
         // Check that CloudFront uses the custom ACM certificate and custom domain
         expect(cfTemplate.Resources[cfDistributionLogicalId]).toMatchObject({
             Type: "AWS::CloudFront::Distribution",
@@ -244,7 +249,7 @@ describe("static websites", () => {
                 },
             }),
         });
-        const cfDistributionLogicalId = computeLogicalId("landing", "CDN");
+        const cfDistributionLogicalId = computeLogicalId("landing", "123456789");
         // Check that CloudFront uses all the custom domains
         expect(cfTemplate.Resources[cfDistributionLogicalId]).toMatchObject({
             Type: "AWS::CloudFront::Distribution",
@@ -330,7 +335,7 @@ describe("static websites", () => {
                 },
             }),
         });
-        const cfDistributionLogicalId = computeLogicalId("landing", "CDN");
+        const cfDistributionLogicalId = computeLogicalId("landing", "123456789");
         const requestFunction = computeLogicalId("landing", "RequestFunction");
         const responseFunction = computeLogicalId("landing", "ResponseFunction");
         expect(cfTemplate.Resources[requestFunction]).toMatchInlineSnapshot(`
@@ -407,10 +412,10 @@ describe("static websites", () => {
             }),
         });
 
-        const cfDistributionLogicalId = computeLogicalId("landing", "CDN");
+        const cfDistributionLogicalId = computeLogicalId("landing", "123456789");
         const bucketLogicalId = computeLogicalId("landing", "Bucket");
         const responseFunction = computeLogicalId("landing", "ResponseFunction");
-        const cfOriginId = computeLogicalId("landing", "CDN", "Origin1");
+        const cfOriginId = computeLogicalId("landing", "123456789", "Origin1");
         expect(cfTemplate.Resources[cfDistributionLogicalId]).toStrictEqual({
             Type: "AWS::CloudFront::Distribution",
             Properties: {
@@ -601,7 +606,7 @@ describe("static websites", () => {
                 },
             }),
         });
-        expect(cfTemplate.Resources[computeLogicalId("landing", "CDN")].Properties).toMatchObject({
+        expect(cfTemplate.Resources[computeLogicalId("landing", "123456789")].Properties).toMatchObject({
             DistributionConfig: {
                 Comment: "This is my comment",
             },
