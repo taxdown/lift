@@ -16,9 +16,10 @@ export class SinglePageApp extends StaticWebsiteAbstract {
         scope: CdkConstruct,
         protected readonly id: string,
         protected readonly configuration: CommonStaticWebsiteConfiguration,
-        protected readonly provider: AwsProvider
+        protected readonly provider: AwsProvider,
+        protected readonly stage?: string
     ) {
-        super(scope, id, configuration, provider);
+        super(scope, id, configuration, provider, stage);
 
         const cfnDistribution = this.distribution.node.defaultChild as cloudfront.CfnDistribution;
         const requestFunction = this.createRequestFunction();

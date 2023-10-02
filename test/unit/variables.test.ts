@@ -48,6 +48,7 @@ describe("variables", () => {
                 (value) =>
                     (cfTemplate.Resources[value] as Record<string, unknown>).Type === "AWS::CloudFront::Distribution"
             ) ?? "";
+
         expect(cfTemplate.Resources[cdnValue] as Record<string, unknown>).toMatchObject({
             Properties: {
                 DistributionConfig: {
